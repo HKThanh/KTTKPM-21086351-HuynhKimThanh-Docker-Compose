@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  flask_app_1:
+    build: ./src
+    ports:
+      - "5001:5000"
+    networks:
+      - my_network
+
+  flask_app_2:
+    build: ./src
+    ports:
+      - "5002:5000"
+    networks:
+      - my_network
+
+  nginx_proxy:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+    networks:
+      - my_network
+    depends_on:
+      - flask_app_1
+      - flask_app_2
+
+networks:
+  my_network:
